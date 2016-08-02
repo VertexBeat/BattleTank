@@ -22,7 +22,6 @@ void ATankPlayerController::Tick(float DeltaSeconds)
 {
 	// Super
 	Super::Tick(DeltaSeconds);
-	UE_LOG(LogTemp, Warning, TEXT("Ticked"));
 	AimTowardsCrosshair();
 }
 
