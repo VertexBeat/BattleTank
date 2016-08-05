@@ -24,8 +24,8 @@ public:
 	void AimAt(FVector WorldSpaceAim,float LaunchSpeed);
 
 private:
-	UTankBarrel* BarrelMesh;
-	UTankTurret* TurretMesh;
+	UTankBarrel* BarrelMesh = nullptr;
+	UTankTurret* TurretMesh = nullptr;
 
 	void MoveBarrelTowards(FVector AimDirection);	
 	void RotateTurret(FVector AimDirection);
