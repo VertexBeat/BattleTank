@@ -7,6 +7,7 @@
 
 class UTankBarrel; // Forward declaration
 class UTankAimingComponent;
+class AProjectile;
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -39,7 +40,13 @@ private:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
 	UPROPERTY(EditAnywhere, Category = Firing)
-		float LaunchSpeed = 100000; // Sensible starting value of 1000m/s
+	float LaunchSpeed = 100000; // Sensible starting value of 1000m/s
+
+	UPROPERTY(EditAnywhere, Category = Setup)
+	TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	// Local reference for spawning projectile
+	UTankBarrel* Barrel = nullptr;
 
 	
 	
