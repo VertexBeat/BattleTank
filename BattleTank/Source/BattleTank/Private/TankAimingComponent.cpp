@@ -3,6 +3,7 @@
 #include "BattleTank.h"
 #include "Tank.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 #include "TankAimingComponent.h"
 
 
@@ -21,9 +22,15 @@ void UTankAimingComponent::SetBarrelReference(UTankBarrel * BarrelToSet)
 	BarrelMesh = BarrelToSet;
 }
 
+void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
+{
+	TurretMesh = TurretToSet;
+}
+
 void UTankAimingComponent::AimAt(FVector HitLocation,float LaunchSpeed)
 {
 	if (!BarrelMesh) { return; };
+	if (!TurretMesh) { return; };
 
 	FVector OutLaunchVelocity;
 	FVector StartLocation = BarrelMesh->GetSocketLocation(FName("Projectile"));
@@ -36,7 +43,13 @@ void UTankAimingComponent::AimAt(FVector HitLocation,float LaunchSpeed)
 		StartLocation,
 		HitLocation,
 		LaunchSpeed,
-		ESuggestProjVelocityTraceOption::DoNotTrace
+		false,
+		0,
+		0,
+		ESuggestProjVelocityTraceOption::DoNotTrace,
+		FCollisionResponseParams::DefaultResponseParam,
+		TArray<AActor*>(),
+		false // DebugDraw
 	);
 
 	if (bHaveAimSolution)
@@ -44,6 +57,12 @@ void UTankAimingComponent::AimAt(FVector HitLocation,float LaunchSpeed)
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		auto OurTankName = GetOwner()->GetName();
 		MoveBarrelTowards(AimDirection);
+		RotateTurret(1);
+	}
+	else
+	{
+		float Time = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("%f: No aim solve found"), Time);
 	}
 	
 }
@@ -58,6 +77,13 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	UE_LOG(LogTemp, Warning, TEXT("AimAsRotator %s"), *AimDirection.ToString());
 	// Move the barrel the right amount this frame
 	// Given a max elevation speed and the frame time
-	BarrelMesh->Elevate(5); // TODO remove magic number
+	BarrelMesh->Elevate(DeltaRotator.Pitch); // TODO remove magic number
 }
+
+void UTankAimingComponent::RotateTurret(float RelativeSpeed)
+{
+	TurretMesh->RotateTurret(RelativeSpeed);
+}
+
+
 
