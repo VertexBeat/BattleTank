@@ -28,5 +28,5 @@ private:
 	UTankTurret* TurretMesh;
 
 	void MoveBarrelTowards(FVector AimDirection);	
-	void RotateTurret(float RelativeSpeed);
+	void RotateTurret(FVector AimDirection);
 };

@@ -57,7 +57,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation,float LaunchSpeed)
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		auto OurTankName = GetOwner()->GetName();
 		MoveBarrelTowards(AimDirection);
-		RotateTurret(1);
+		RotateTurret(AimDirection);
 	}
 	else
 	{
@@ -80,9 +80,12 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	BarrelMesh->Elevate(DeltaRotator.Pitch); // TODO remove magic number
 }
 
-void UTankAimingComponent::RotateTurret(float RelativeSpeed)
+void UTankAimingComponent::RotateTurret(FVector AimDirection)
 {
-	TurretMesh->RotateTurret(RelativeSpeed);
+	auto TurretRotator = TurretMesh->GetForwardVector().Rotation();
+	auto AimAsRotator = AimDirection.Rotation();
+	auto DeltaRotator = AimAsRotator - TurretRotator;
+	TurretMesh->RotateTurret(DeltaRotator.Yaw);
 }
 
 
