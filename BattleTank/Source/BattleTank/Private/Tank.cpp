@@ -7,16 +7,14 @@
 #include "TankMovementComponent.h"
 #include "Tank.h"
 
-
-void ATank::SetBarrelReference(UTankBarrel * BarrelToSet)
+void ATank::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet, UTankAimingComponent* AimingComponent)
 {
-	TankAimingComponent->SetBarrelReference(BarrelToSet);
+	if (!BarrelToSet || !TurretToSet || !AimingComponent) { return; }
 	Barrel = BarrelToSet;
-}
+	TankAimingComponent = AimingComponent;
 
-void ATank::SetTurretReference(UTankTurret * TurretToSet)
-{
-	TankAimingComponent->SetTurretReference(TurretToSet);
+	// Delegating setting Barrel and Turret in TankAimingComponent
+	TankAimingComponent->Initialize(BarrelToSet, TurretToSet);
 }
 
 // Sets default values
@@ -24,9 +22,6 @@ ATank::ATank()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-
-	// No need to protect pointers as added at construction
-	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
 }
 
 // Called when the game starts or when spawned
