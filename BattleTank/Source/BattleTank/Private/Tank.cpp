@@ -13,7 +13,8 @@ void ATank::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 	Barrel = BarrelToSet;
 
 	// Delegating setting Barrel and Turret in TankAimingComponent
-	TankAimingComponent->Initialize(BarrelToSet, TurretToSet);
+
+	//TankAimingComponent->Initialize(BarrelToSet, TurretToSet);
 }
 
 // Sets default values
@@ -40,7 +41,7 @@ void ATank::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 
 void ATank::AimAt(FVector HitLocation)
 {
-	TankAimingComponent->AimAt(HitLocation,LaunchSpeed);
+	// TankAimingComponent->AimAt(HitLocation,LaunchSpeed);
 }
 
 void ATank::Fire()
