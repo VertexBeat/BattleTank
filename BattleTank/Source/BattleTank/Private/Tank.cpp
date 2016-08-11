@@ -7,11 +7,10 @@
 #include "TankMovementComponent.h"
 #include "Tank.h"
 
-void ATank::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet, UTankAimingComponent* AimingComponent)
+void ATank::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
-	if (!BarrelToSet || !TurretToSet || !AimingComponent) { return; }
+	if (!BarrelToSet || !TurretToSet) { return; }
 	Barrel = BarrelToSet;
-	TankAimingComponent = AimingComponent;
 
 	// Delegating setting Barrel and Turret in TankAimingComponent
 	TankAimingComponent->Initialize(BarrelToSet, TurretToSet);

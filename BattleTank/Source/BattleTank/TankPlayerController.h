@@ -6,8 +6,9 @@
 #include "TankPlayerController.generated.h" // must be last include
 
 class ATank; // Forward decleration
+class UTankAimingComponent;
 /**
- * 
+ * Responsible for helping the player to aim
  */
 UCLASS()
 class BATTLETANK_API ATankPlayerController : public APlayerController
@@ -29,6 +30,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	ATank* GetControlledTank() const;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+	void FoundAimingComponent(UTankAimingComponent* AimCompRef);
 
 private:
 
