@@ -3,7 +3,6 @@
 #include "BattleTank.h"
 #include "TankBarrel.h"
 #include "Projectile.h"
-#include "TankAimingComponent.h"
 #include "TankMovementComponent.h"
 #include "Tank.h"
 
@@ -18,7 +17,6 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
-	TankAimingComponent = FindComponentByClass<UTankAimingComponent>();
 	
 }
 
@@ -30,10 +28,6 @@ void ATank::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 
 }
 
-void ATank::AimAt(FVector HitLocation)
-{
-	TankAimingComponent->AimAt(HitLocation,LaunchSpeed);
-}
 
 void ATank::Fire()
 {
@@ -50,7 +44,7 @@ void ATank::Fire()
 			Barrel->GetSocketRotation(FName("Projectile"))
 			);
 
-		Projectile->LaunchProjectile(LaunchSpeed);
+		Projectile->LaunchProjectile(40000.f);
 		LastFireTime = FPlatformTime::Seconds();
 	}
 }
