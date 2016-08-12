@@ -1,9 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BattleTank.h"
-#include "TankBarrel.h"
-#include "Projectile.h"
-#include "TankMovementComponent.h"
 #include "Tank.h"
 
 // Sets default values
@@ -13,39 +10,4 @@ ATank::ATank()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-// Called when the game starts or when spawned
-void ATank::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-
-// Called to bind functionality to input
-void ATank::SetupPlayerInputComponent(class UInputComponent* InputComponent)
-{
-	Super::SetupPlayerInputComponent(InputComponent);
-
-}
-
-
-void ATank::Fire()
-{
-	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
-
-	if (!ensure(Barrel)) { return; }
-
-	if (isReloaded)
-	{
-		// Spawn a projectile
-		auto Projectile = GetWorld()->SpawnActor<AProjectile>(
-			ProjectileBlueprint,
-			Barrel->GetSocketLocation(FName("Projectile")),
-			Barrel->GetSocketRotation(FName("Projectile"))
-			);
-
-		Projectile->LaunchProjectile(40000.f);
-		LastFireTime = FPlatformTime::Seconds();
-	}
-}
 

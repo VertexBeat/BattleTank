@@ -24,7 +24,6 @@ void ATankAIController::Tick(float DeltaSeconds)
 
 		UTankAimingComponent* AimingComponent = ControlledTank->FindComponentByClass<UTankAimingComponent>();
 		AimingComponent->AimAt(Target->GetTargetLocation());
-
-		//ControlledTank->Fire(); // TODO limit firing rate
+		AimingComponent->Fire();
 	}
 }

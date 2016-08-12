@@ -5,11 +5,12 @@
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h" // must be last include
 
-class ATank; // Forward decleration
 class UTankAimingComponent;
+
 /**
  * Responsible for helping the player to aim
  */
+
 UCLASS()
 class BATTLETANK_API ATankPlayerController : public APlayerController
 {
