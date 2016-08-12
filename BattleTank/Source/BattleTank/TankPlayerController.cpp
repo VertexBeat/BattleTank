@@ -8,10 +8,8 @@
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)) { return; }
-
 	FoundAimingComponent(AimingComponent);
 }
 
