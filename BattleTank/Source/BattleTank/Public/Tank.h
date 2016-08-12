@@ -19,9 +19,6 @@ public:
 	void AimAt(FVector HitLocation);
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet, UTankAimingComponent* TankAimingComponent);
-
-	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void Fire();
 
 protected:
@@ -53,6 +50,7 @@ private:
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	// Local reference for spawning projectile
+	// TODO delete
 	UTankBarrel* Barrel = nullptr;
 
 	double LastFireTime = 0;

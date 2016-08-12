@@ -7,17 +7,6 @@
 #include "TankMovementComponent.h"
 #include "Tank.h"
 
-void ATank::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet, UTankAimingComponent* TankAimingComponentToSet)
-{
-	if (!ensure(BarrelToSet) || !ensure(TurretToSet)) { return; }
-	Barrel = BarrelToSet;
-
-	// Delegating setting Barrel and Turret in TankAimingComponent
-	TankAimingComponent = TankAimingComponentToSet;
-
-	TankAimingComponent->Initialize(BarrelToSet, TurretToSet);
-}
-
 // Sets default values
 ATank::ATank()
 {
@@ -29,6 +18,7 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+	TankAimingComponent = FindComponentByClass<UTankAimingComponent>();
 	
 }
 
@@ -49,7 +39,7 @@ void ATank::Fire()
 {
 	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
 
-	if (!ensure(Barrel)) { return; };
+	if (!ensure(Barrel)) { return; }
 
 	if (isReloaded)
 	{
