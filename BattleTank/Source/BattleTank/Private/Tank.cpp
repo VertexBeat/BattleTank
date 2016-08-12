@@ -9,12 +9,12 @@
 
 void ATank::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
-	if (!BarrelToSet || !TurretToSet) { return; }
+	if (!ensure(BarrelToSet) || !ensure(TurretToSet)) { return; }
 	Barrel = BarrelToSet;
 
 	// Delegating setting Barrel and Turret in TankAimingComponent
 
-	//TankAimingComponent->Initialize(BarrelToSet, TurretToSet);
+	TankAimingComponent->Initialize(BarrelToSet, TurretToSet);
 }
 
 // Sets default values
@@ -47,9 +47,10 @@ void ATank::AimAt(FVector HitLocation)
 void ATank::Fire()
 {
 	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
-	if (!Barrel) { return; };
 
-	if (Barrel && isReloaded)
+	if (!ensure(Barrel)) { return; };
+
+	if (isReloaded)
 	{
 		// Spawn a projectile
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(
