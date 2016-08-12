@@ -7,12 +7,13 @@
 #include "TankMovementComponent.h"
 #include "Tank.h"
 
-void ATank::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
+void ATank::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet, UTankAimingComponent* TankAimingComponentToSet)
 {
 	if (!ensure(BarrelToSet) || !ensure(TurretToSet)) { return; }
 	Barrel = BarrelToSet;
 
 	// Delegating setting Barrel and Turret in TankAimingComponent
+	TankAimingComponent = TankAimingComponentToSet;
 
 	TankAimingComponent->Initialize(BarrelToSet, TurretToSet);
 }
@@ -41,7 +42,7 @@ void ATank::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 
 void ATank::AimAt(FVector HitLocation)
 {
-	// TankAimingComponent->AimAt(HitLocation,LaunchSpeed);
+	TankAimingComponent->AimAt(HitLocation,LaunchSpeed);
 }
 
 void ATank::Fire()

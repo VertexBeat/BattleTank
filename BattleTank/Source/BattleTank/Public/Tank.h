@@ -19,7 +19,7 @@ public:
 	void AimAt(FVector HitLocation);
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
+	void Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet, UTankAimingComponent* TankAimingComponent);
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void Fire();
@@ -28,6 +28,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	UTankMovementComponent* TankMovementComponent = nullptr;
+
+	UTankAimingComponent* TankAimingComponent = nullptr;
 
 private:
 	// Sets default values for this pawn's properties
