@@ -132,9 +132,10 @@ void UTankAimingComponent::Fire()
 
 bool UTankAimingComponent::IsBarrelMoving()
 {
-	if (!ensure(BarrelMesh)) { return false; }
-	FVector Forward = BarrelMesh->GetForwardVector();
-	return !Forward.Equals(AimingDirection, 0.1f); // inversion of bool return-value
+	//if (!ensure(BarrelMesh)) { return false; }
+	//FVector Forward = BarrelMesh->GetForwardVector();
+	//return !Forward.Equals(AimingDirection, 0.1f); // inversion of bool return-value
+	return true;
 }
 
 
