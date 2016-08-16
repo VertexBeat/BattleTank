@@ -57,6 +57,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
+	bool IsBarrelMoving();
+	FVector AimingDirection;
+
 	UTankBarrel* BarrelMesh = nullptr;
 	UTankTurret* TurretMesh = nullptr;
 	double LastFireTime = 0;

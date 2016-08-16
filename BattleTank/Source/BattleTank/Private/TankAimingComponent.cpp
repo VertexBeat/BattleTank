@@ -23,19 +23,27 @@ void UTankAimingComponent::BeginPlay()
 	LastFireTime = FPlatformTime::Seconds();
 }
 
-void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
-{
-	if ((FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds)
-	{
-		FiringState = EFiringState::Reloading;
-	}
-	// TODO Handle aiming and locked states
-}
-
 void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
 	BarrelMesh = BarrelToSet;
 	TurretMesh = TurretToSet;
+}
+
+void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
+{
+	if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds)
+	{
+		FiringState = EFiringState::Reloading;
+	}
+	else if (IsBarrelMoving())
+	{
+		FiringState = EFiringState::Aiming;
+	}
+	else
+	{
+		FiringState = EFiringState::Locked;
+	}
+	// TODO Handle aiming and locked states
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation)
@@ -66,6 +74,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("DEBUG AimAt"))
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		AimingDirection = AimDirection;
 		auto OurTankName = GetOwner()->GetName();
 		MoveBarrelTowards(AimDirection);
 		RotateTurret(AimDirection);
@@ -119,6 +128,13 @@ void UTankAimingComponent::Fire()
 		Projectile->LaunchProjectile(LaunchSpeed);
 		LastFireTime = FPlatformTime::Seconds();
 	}
+}
+
+bool UTankAimingComponent::IsBarrelMoving()
+{
+	if (!ensure(BarrelMesh)) { return false; }
+	FVector Forward = BarrelMesh->GetForwardVector();
+	return !Forward.Equals(AimingDirection, 0.1f); // inversion of bool return-value
 }
 
 
