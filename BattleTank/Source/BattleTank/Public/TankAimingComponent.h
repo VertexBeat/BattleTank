@@ -1,29 +1,44 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright EmbraceIT Ltd.
 
 #pragma once
 
 #include "Components/ActorComponent.h"
 #include "TankAimingComponent.generated.h"
 
-class AProjectile;
-
+// Enum for aiming state
 UENUM()
-enum class EFiringState : uint8 
+enum class EFiringState : uint8
 {
-	Locked, 
-	Aiming, 
-	Reloading
+	Reloading,
+	Aiming,
+	Locked
 };
 
-class UTankBarrel; //Forward Declaration
+// Forward Declaration
+class UTankBarrel;
 class UTankTurret;
+class AProjectile;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+// Holds barrel's properties and Elevate method
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANK_API UTankAimingComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
+	
+	void AimAt(FVector HitLocation);
+
+	UFUNCTION(BlueprintCallable, Category = "Firing")
+	void Fire();
+
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "State")
+	EFiringState FiringState = EFiringState::Reloading;
+
+private:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
@@ -31,39 +46,23 @@ public:
 
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void Fire();
+	void MoveBarrelTowards(FVector AimDirection);
 
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
+	bool IsBarrelMoving();
 
-	void AimAt(FVector HitLocation);
-
-protected:
-
-	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EFiringState FiringState = EFiringState::Aiming;
+	UTankBarrel* Barrel = nullptr;
+	UTankTurret* Turret = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float LaunchSpeed = 4000; // Sensible starting value of 4000m/s
-
-private:
-
-	// EditDefaultsOnly -> Can be edited in Blueprint
-	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	float ReloadTimeInSeconds = 3.f;
-
-	// EditAnywhere -> Can edited in every class-instance
+	float LaunchSpeed = 4000;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
-	bool IsBarrelMoving();
-	FVector AimingDirection;
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	float ReloadTimeInSeconds = 3;
 
-	UTankBarrel* BarrelMesh = nullptr;
-	UTankTurret* TurretMesh = nullptr;
 	double LastFireTime = 0;
 
-	void MoveBarrelTowards(FVector AimDirection);	
-	void RotateTurret(FVector AimDirection);
+	FVector AimDirection;
 };

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright EmbraceIT Ltd.
 
 #include "BattleTank.h"
 #include "TankTrack.h"
@@ -6,42 +6,34 @@
 
 void UTankMovementComponent::Initialise(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet)
 {
-	if (!ensure(LeftTrackToSet || RightTrackToSet)) { return; }
 	LeftTrack = LeftTrackToSet;
 	RightTrack = RightTrackToSet;
 }
 
-void UTankMovementComponent::IntendMoveForward(float Throw)
-{
-	if (!ensure(LeftTrack || RightTrack)) { return; }
-	LeftTrack->SetThrottle(Throw);
-	RightTrack->SetThrottle(Throw);
-
-	// TODO prevent double-speed due to dual controls
-
-}
-
-void UTankMovementComponent::IntendTurnRight(float Throw)
-{
-	if (!ensure(LeftTrack || RightTrack)) { return; }
-	LeftTrack->SetThrottle(Throw);
-	RightTrack->SetThrottle(-Throw);
-
-	// TODO prevent double-speed due to dual controls
-}
-
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
-	// no need to call super as we`re replacing the functionality
-	auto TankName = GetOwner()->GetName();
-	auto AIForwardIntention = MoveVelocity.GetSafeNormal(); // AI would like to move
-	auto TankForward = GetOwner()->GetActorForwardVector().GetSafeNormal(); // local forward vector of tanks
+	// No need to call Super as we're replacing the functionality
+
+	auto TankForward = GetOwner()->GetActorForwardVector().GetSafeNormal();
+	auto AIForwardIntention = MoveVelocity.GetSafeNormal();
 
 	auto ForwardThrow = FVector::DotProduct(TankForward, AIForwardIntention);
 	IntendMoveForward(ForwardThrow);
 
-	auto RightThrow = FVector::CrossProduct(TankForward, AIForwardIntention);
-	IntendTurnRight(RightThrow.Z);
+	auto RightThrow = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
+	IntendTurnRight(RightThrow);
 }
 
+void UTankMovementComponent::IntendMoveForward(float Throw)
+{
+	if (!ensure(LeftTrack && RightTrack)) { return; }
+	LeftTrack->SetThrottle(Throw);
+	RightTrack->SetThrottle(Throw);
+}
 
+void UTankMovementComponent::IntendTurnRight(float Throw)
+{
+	if (!ensure(LeftTrack && RightTrack)) { return; }
+	LeftTrack->SetThrottle(Throw);
+	RightTrack->SetThrottle(-Throw);
+}
