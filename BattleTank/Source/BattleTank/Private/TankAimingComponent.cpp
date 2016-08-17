@@ -20,6 +20,7 @@ void UTankAimingComponent::BeginPlay()
 {
 	// So that first first is after initial reload
 	LastFireTime = FPlatformTime::Seconds();
+	CurrentAmmunition = Ammunition;
 }
 
 void UTankAimingComponent::Initialise(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
@@ -34,9 +35,13 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 	{
 		FiringState = EFiringState::Reloading;
 	}
-	else if (IsBarrelMoving())
+	else if (IsBarrelMoving() && FiringState != EFiringState::Empty)
 	{
 		FiringState = EFiringState::Aiming;
+	}
+	else if (CurrentAmmunition <= 0)
+	{
+		FiringState = EFiringState::Empty;
 	}
 	else
 	{
@@ -101,7 +106,7 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 
 void UTankAimingComponent::Fire()
 {
-	if (FiringState != EFiringState::Reloading)
+	if (FiringState == EFiringState::Locked || FiringState == EFiringState::Aiming)
 	{
 		// Spawn a projectile at the socket location on the barrel
 		if (!ensure(Barrel)) { return; }
@@ -114,5 +119,12 @@ void UTankAimingComponent::Fire()
 
 		Projectile->LaunchProjectile(LaunchSpeed);
 		LastFireTime = FPlatformTime::Seconds();
+
+		// manage Ammunition
+		if (FiringState != EFiringState::Empty)
+		{
+			CurrentAmmunition--;
+			CurrentAmmunition = FMath::Clamp<int>(CurrentAmmunition, 0, Ammunition);
+		}
 	}
 }
