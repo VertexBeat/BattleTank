@@ -22,8 +22,11 @@ AProjectile::AProjectile()
 	LaunchBlast->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	ImpactBlast = CreateDefaultSubobject<UParticleSystemComponent>(FName("Impact Blast"));
-	ImpactBlast->AttachToComponent(RootComponent,FAttachmentTransformRules::KeepRelativeTransform); // TODO update to new API
+	ImpactBlast->AttachToComponent(RootComponent,FAttachmentTransformRules::KeepRelativeTransform);
 	ImpactBlast->bAutoActivate = false;
+
+	ExplosionForce = CreateDefaultSubobject<URadialForceComponent>(FName("Explosion Force"));
+	ExplosionForce->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +40,12 @@ void AProjectile::BeginPlay()
 void  AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	LaunchBlast->Deactivate();
+	
+	// My solution of Radial Forces and caching
+	//auto ForceLocation = CollisionMesh->GetComponentLocation();
+	//ExplosionForce->SetWorldLocation(ForceLocation);
+
+	ExplosionForce->FireImpulse();
 	CollisionMesh->ToggleVisibility(false);
 	ImpactBlast->Activate();
 }
