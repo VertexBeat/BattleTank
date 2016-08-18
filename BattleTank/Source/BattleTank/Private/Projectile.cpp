@@ -33,8 +33,7 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
-	
+	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);	
 }
 
 void  AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -46,8 +45,26 @@ void  AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, 
 	//ExplosionForce->SetWorldLocation(ForceLocation);
 
 	ExplosionForce->FireImpulse();
-	CollisionMesh->ToggleVisibility(false);
+	SetRootComponent(ImpactBlast);
 	ImpactBlast->Activate();
+	CollisionMesh->DestroyComponent();
+
+	UGameplayStatics::ApplyRadialDamage(
+		this,
+		ProjectileDamage,
+		GetActorLocation(),
+		ExplosionForce->Radius,
+		UDamageType::StaticClass(),
+		TArray<AActor*>() //damage all actors
+	);
+
+	FTimerHandle TimeHandler;
+	GetWorld()->GetTimerManager().SetTimer(TimeHandler,this, &AProjectile::TimerExpired, DestroyDelay, false);
+}
+
+void AProjectile::TimerExpired()
+{
+	Destroy();
 }
 
 void AProjectile::LaunchProjectile(float Speed)
