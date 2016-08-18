@@ -124,7 +124,7 @@ void UTankAimingComponent::Fire()
 		if (FiringState != EFiringState::Empty)
 		{
 			CurrentAmmunition--;
-			CurrentAmmunition = FMath::Clamp<int>(CurrentAmmunition, 0, Ammunition);
+			CurrentAmmunition = FMath::Clamp<int32>(CurrentAmmunition, 0, Ammunition);
 		}
 	}
 }

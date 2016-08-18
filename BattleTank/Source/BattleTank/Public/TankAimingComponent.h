@@ -42,10 +42,10 @@ protected:
 	EFiringState FiringState = EFiringState::Reloading;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
-	int Ammunition = 3;
+	int32 Ammunition = 3;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Firing")
-	int CurrentAmmunition;
+	int32 CurrentAmmunition;
 
 private:
 	// Sets default values for this component's properties
