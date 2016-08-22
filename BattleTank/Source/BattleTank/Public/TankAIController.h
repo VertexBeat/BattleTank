@@ -3,6 +3,7 @@
 #pragma once
 
 #include "AIController.h"
+#include "Tank.h"
 #include "TankAIController.generated.h"
 
 /**
@@ -18,10 +19,12 @@ private:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-	virtual void SetPawn(APawn* InPwan) override;
+	virtual void SetPawn(APawn* InPawn) override;
 
 	UFUNCTION()
 	void OnPossedTankDeath();
+
+	ATank* TankPawn = nullptr;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Setup")

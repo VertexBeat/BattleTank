@@ -39,15 +39,15 @@ void ATankAIController::SetPawn(APawn* InPawn)
 	Super::SetPawn(InPawn); // call base clase
 	if (InPawn)
 	{
-		auto PossessedTank = Cast<ATank>(InPawn);
-		if (!ensure(PossessedTank)) { return; }
+		TankPawn = Cast<ATank>(InPawn);
+		if (!ensure(TankPawn)) { return; }
 
 		//TODO Subscribe our local method to the tanks death
-		PossessedTank->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossedTankDeath);
+		TankPawn->OnDeath.AddUniqueDynamic(this, &ATankAIController::OnPossedTankDeath);
 	}
 }
 
 void ATankAIController::OnPossedTankDeath()
 {
-	UE_LOG(LogTemp, Warning, TEXT("AI Controller Recieved!"))
+	TankPawn->DetachFromControllerPendingDestroy();
 }
