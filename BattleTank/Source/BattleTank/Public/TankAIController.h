@@ -17,6 +17,11 @@ private:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaSeconds) override;
+
+	virtual void SetPawn(APawn* InPwan) override;
+
+	UFUNCTION()
+	void OnPossedTankDeath();
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Setup")
